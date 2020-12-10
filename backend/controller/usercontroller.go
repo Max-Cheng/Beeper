@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"Chat-Room/backend/common"
-	"Chat-Room/backend/model"
+	"Beeper/backend/common"
+	"Beeper/backend/model"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"

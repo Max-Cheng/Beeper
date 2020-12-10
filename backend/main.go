@@ -1,8 +1,8 @@
 package main
 
 import (
-	"Chat-Room/backend/common"
-	"Chat-Room/backend/conf"
+	"Beeper/backend/common"
+	"Beeper/backend/conf"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,8 +1,8 @@
 package common
 
 import (
-	"Chat-Room/backend/conf"
-	"Chat-Room/backend/model"
+	"Beeper/backend/conf"
+	"Beeper/backend/model"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

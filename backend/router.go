@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Chat-Room/backend/controller"
+	"Beeper/backend/controller"
 	"github.com/gin-gonic/gin"
 )
 
