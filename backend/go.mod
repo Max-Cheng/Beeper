@@ -1,4 +1,4 @@
-module Chat-Room/backend
+module Beeper/backend
 
 go 1.15
 
