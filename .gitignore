@@ -1,0 +1,8 @@
+/backend/.idea/*
+*/build/*
+.idea/*
+*.iml
+/out/*
+
+.DS_Store
+Thumbs.db
