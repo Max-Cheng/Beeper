@@ -3,6 +3,7 @@ package middleware
 import (
 	"Beeper/backend/common"
 	"Beeper/backend/model"
+	"Beeper/backend/response"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -15,9 +16,10 @@ func AuthMiddleware() gin.HandlerFunc {
 		tokenString:=ctx.GetHeader("Authorization")
 		//Verify Token
 		if tokenString==""||!strings.HasPrefix(tokenString,"Bearer ") {
-			ctx.JSON(http.StatusBadRequest,gin.H{
-				"msg":"Permission denied",
-			})
+			response.Response(ctx,http.StatusBadRequest,http.StatusBadRequest,nil,"Permission denied")
+			//ctx.JSON(http.StatusBadRequest,gin.H{
+			//	"msg":"Permission denied",
+			//})
 			ctx.Abort()
 			return
 		}
@@ -27,10 +29,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		token,claims,err:=common.ParseToken(tokenString)
 		if err != nil||!token.Valid {
 			log.Panic("Parse Token Failed:",err)
-			ctx.JSON(http.StatusUnauthorized,gin.H{
-				"code":http.StatusUnauthorized,
-				"msg":"Parse Token Failed",
-			})
+			response.Response(ctx,http.StatusUnauthorized,400,nil,"Parse Token Failed")
+			//ctx.JSON(http.StatusUnauthorized,gin.H{
+			//	"code":http.StatusUnauthorized,
+			//	"msg":"Parse Token Failed",
+			//})
 			ctx.Abort()
 			return
 		}
@@ -41,10 +44,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		DB.First(&user,userid)
 		//Verify User Exists
 		if user.ID==0{
-			ctx.JSON(http.StatusUnauthorized,gin.H{
-				"code":http.StatusUnauthorized,
-				"msg":"User Not Exists",
-			})
+			response.Response(ctx,http.StatusUnauthorized,http.StatusUnauthorized,nil,"User Not Exists")
+			//ctx.JSON(http.StatusUnauthorized,gin.H{
+			//	"code":http.StatusUnauthorized,
+			//	"msg":"User Not Exists",
+			//})
 			ctx.Abort()
 			return
 		}
