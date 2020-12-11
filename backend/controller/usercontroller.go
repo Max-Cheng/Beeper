@@ -17,20 +17,14 @@ func Login(ctx *gin.Context) {
 	password := ctx.PostForm("password")
 	username := ctx.PostForm("username")
 	//Login Verify
-	if len(username) < 0 {
+	if len(username) <= 0 {
 		response.Failed(ctx,nil,"ID Can't Be empty")
 		//ctx.JSON(http.StatusBadRequest, gin.H{
 		//	"msg": "ID Can't Be empty",
 		//})
 		return
 	}
-	if len(password) < 6 {
-		response.Failed(ctx,nil,"Password Error")
-		//ctx.JSON(http.StatusBadRequest, gin.H{
-		//	"msg": "Password Too Short",
-		//})
-		return
-	}
+
 	db.Where("username = ?", username).First(&user)
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		response.Failed(ctx,nil,"Password Not compete")
@@ -71,6 +65,12 @@ func Register(ctx *gin.Context) {
 		//	"code": http.StatusBadRequest,
 		//	"msg": "Password Too Short",
 		//})
+		return
+	}
+	var user model.User
+	db.Where("username = ?",username).First(&user)
+	if user.ID!=0 {
+		response.Failed(ctx,nil,"Username Invalid")
 		return
 	}
 	hasePassowrd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

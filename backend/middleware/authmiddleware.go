@@ -4,6 +4,7 @@ import (
 	"Beeper/backend/common"
 	"Beeper/backend/model"
 	"Beeper/backend/response"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -38,11 +39,12 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 		//If Pass Verify Get Claims User Id
-		userid:=claims.Id
+		userid:=claims.Userid
 		DB:=common.Get_db()
 		var user model.User
 		DB.First(&user,userid)
 		//Verify User Exists
+		fmt.Println(user)
 		if user.ID==0{
 			response.Response(ctx,http.StatusUnauthorized,http.StatusUnauthorized,nil,"User Not Exists")
 			//ctx.JSON(http.StatusUnauthorized,gin.H{
