@@ -14,10 +14,10 @@ import (
 func Login(ctx *gin.Context) {
 	db := common.Get_db()
 	var user model.User
-	password := ctx.PostForm("password")
-	username := ctx.PostForm("username")
+	var requestuser model.User
+	ctx.Bind(&requestuser)
 	//Login Verify
-	if len(username) <= 0 {
+	if len(requestuser.Username) <= 0 {
 		response.Failed(ctx,nil,"ID Can't Be empty")
 		//ctx.JSON(http.StatusBadRequest, gin.H{
 		//	"msg": "ID Can't Be empty",
@@ -25,8 +25,8 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	db.Where("username = ?", username).First(&user)
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+	db.Where("username = ?", requestuser.Username).First(&user)
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(requestuser.Password)); err != nil {
 		response.Failed(ctx,nil,"Password Not compete")
 		//ctx.JSON(http.StatusBadRequest, gin.H{
 		//	"msg": "Password Not compete",
@@ -49,9 +49,9 @@ func Login(ctx *gin.Context) {
 }
 func Register(ctx *gin.Context) {
 	db := common.Get_db()
-	username := ctx.PostForm("username")
-	password := ctx.PostForm("password")
-	if len(username) <= 0 {
+	var requestuser model.User
+	ctx.Bind(&requestuser)
+	if len(requestuser.Username) <= 0 {
 		response.Failed(ctx,nil,"Username Too Short")
 		//ctx.JSON(http.StatusBadRequest, gin.H{
 		//	"code": http.StatusBadRequest,
@@ -59,7 +59,7 @@ func Register(ctx *gin.Context) {
 		//})
 		return
 	}
-	if len(password) < 6 {
+	if len(requestuser.Password) < 6 {
 		response.Failed(ctx,nil,"Password Too Short")
 		//ctx.JSON(http.StatusBadRequest, gin.H{
 		//	"code": http.StatusBadRequest,
@@ -68,12 +68,12 @@ func Register(ctx *gin.Context) {
 		return
 	}
 	var user model.User
-	db.Where("username = ?",username).First(&user)
+	db.Where("username = ?",requestuser.Username).First(&user)
 	if user.ID!=0 {
 		response.Failed(ctx,nil,"Username Invalid")
 		return
 	}
-	hasePassowrd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hasePassowrd, err := bcrypt.GenerateFromPassword([]byte(requestuser.Password), bcrypt.DefaultCost)
 	if err != nil {
 		response.Response(ctx,http.StatusInternalServerError,http.StatusServiceUnavailable,nil,"Hash Password Faild")
 		//ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -83,7 +83,7 @@ func Register(ctx *gin.Context) {
 		return
 	}
 	newUser := model.User{
-		Username: username,
+		Username: requestuser.Username,
 		Password: string(hasePassowrd),
 	}
 	db.Create(&newUser)

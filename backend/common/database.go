@@ -20,7 +20,6 @@ func InitDB() {
 		conf.SQL_ServerPort,
 		conf.SQL_Database,
 	)
-	fmt.Println(args)
 	//Link database
 	db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
 	//Can't connect to database
